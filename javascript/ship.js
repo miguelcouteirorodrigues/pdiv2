@@ -14,18 +14,20 @@ class Ship {
         this.img.src = "assets/spaceship.svg";
         this.scale = 10;
 
-        this.edges = [];
+        this.edges = [new Point(Math.floor(this.x - ((this.img.width / this.scale) / 2)), Math.floor(this.y - ((this.img.height / this.scale) / 2))),
+            new Point(Math.floor(this.x + ((this.img.width / this.scale) / 2)), Math.floor(this.y - ((this.img.height / this.scale) / 2))),
+            new Point(Math.floor(this.x - ((this.img.width / this.scale) / 2)), Math.floor(this.y + ((this.img.height / this.scale) / 2))),
+            new Point(Math.floor(this.x + ((this.img.width / this.scale) / 2)), Math.floor(this.y + ((this.img.height / this.scale) / 2)))];
     }
 
     draw(debug) {
         this.ctx.save();
         this.ctx.translate(this.x, this.y);
-        //this.ctx.rotate(this.r);
 
-        this.edges = [new Point(this.x - (this.img.width / 2), this.y - (this.img.height / 2)),
-                    new Point(this.x + (this.img.width / 2), this.y - (this.img.height / 2)),
-                    new Point(this.x - (this.img.width / 2), this.y + (this.img.height / 2)),
-                    new Point(this.x + (this.img.width / 2), this.y + (this.img.height / 2))];
+        this.edges = [new Point(Math.floor(this.x - ((this.img.width / this.scale) / 2)), Math.floor(this.y - ((this.img.height / this.scale) / 2))),
+                    new Point(Math.floor(this.x + ((this.img.width / this.scale) / 2)), Math.floor(this.y - ((this.img.height / this.scale) / 2))),
+                    new Point(Math.floor(this.x - ((this.img.width / this.scale) / 2)), Math.floor(this.y + ((this.img.height / this.scale) / 2))),
+                    new Point(Math.floor(this.x + ((this.img.width / this.scale) / 2)), Math.floor(this.y + ((this.img.height / this.scale) / 2)))];
 
         var shipCenter = new Point(((this.img.width / this.scale) / 2) * -1, (((this.img.height / this.scale) / 2) * -1));
         this.ctx.imageSmoothingEnabled = "true";
