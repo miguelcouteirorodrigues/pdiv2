@@ -20,7 +20,7 @@ class Ship {
             new Point(Math.floor(this.x + ((this.img.width / this.scale) / 2)), Math.floor(this.y + ((this.img.height / this.scale) / 2)))];
     }
 
-    draw(debug) {
+    draw() {
         this.ctx.save();
         this.ctx.translate(this.x, this.y);
 

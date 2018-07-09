@@ -18,6 +18,7 @@ class Engine {
 
         this.tempShot = false;
         this.shipShots = [];
+        this.asteroids = [];
 
         //screen edges
         this.topLeftEdge;
@@ -64,19 +65,8 @@ class Engine {
         context.clearRect(0, 0, innerWidth, innerHeight);
         context.beginPath();
 
-        /*game code*/
-        //Spacebar
-        if(this.keys[32]) {
-            if (this.tempShot) {
-                let shot = new Shot(context, this.ship.x, this.ship.y - 10, true);
-                this.shipShots.push(shot);
-                this.tempShot = false;
-            }
-        }
-        else if (!this.keys[32]) {
-            this.tempShot = true;
-        }
-
+        /* GAME CODE */
+        
         //P
         if(this.keys[80]) {
             if (this.tempPause != this.pause) {
@@ -87,55 +77,69 @@ class Engine {
             this.tempPause = !this.pause;
         }
 
-        //NAVIGATION
-        //Left arrow key
-        if(this.keys[37]) {
-            if (this.ship.vx > this.maxVelocity * -1) {
-                if (this.ship.ax > 0) {
-                    this.ship.ax = this.accelerationFactor * -1 * this.breakingFactor;
-                    calculateFriction(this.ship);
+        if (!this.pause) {
+            //Spacebar
+            if(this.keys[32]) {
+                if (this.tempShot) {
+                    let shot = new Shot(context, this.ship.x, this.ship.y - 10, true, true);
+                    this.shipShots.push(shot);
+                    this.tempShot = false;
+                }
+            }
+            else if (!this.keys[32]) {
+                this.tempShot = true;
+            }
+
+            //NAVIGATION
+            //Left arrow key
+            if(this.keys[37]) {
+                if (this.ship.vx > this.maxVelocity * -1) {
+                    if (this.ship.ax > 0) {
+                        this.ship.ax = this.accelerationFactor * -1 * this.breakingFactor;
+                        calculateFriction(this.ship);
+                    }
+                    else {
+                        this.ship.ax = this.accelerationFactor * -1;
+                    }
                 }
                 else {
-                    this.ship.ax = this.accelerationFactor * -1;
+                    this.ship.ax = 0;
                 }
             }
-            else {
-                this.ship.ax = 0;
-            }
-        }
-        //Right arrow key
-        if(this.keys[39]) {
-            if (this.ship.vx < this.maxVelocity) {
-                if (this.ship.ax < 0) {
-                    this.ship.ax = this.accelerationFactor * this.breakingFactor;
-                    calculateFriction(this.ship);
+            //Right arrow key
+            if(this.keys[39]) {
+                if (this.ship.vx < this.maxVelocity) {
+                    if (this.ship.ax < 0) {
+                        this.ship.ax = this.accelerationFactor * this.breakingFactor;
+                        calculateFriction(this.ship);
+                    }
+                    else {
+                        this.ship.ax = this.accelerationFactor;
+                    }
                 }
                 else {
-                    this.ship.ax = this.accelerationFactor;
+                    this.ship.ax = 0;
                 }
             }
-            else {
+            if ((this.keys[37] && this.keys[39]) || (!this.keys[37] && !this.keys[39])) {
                 this.ship.ax = 0;
+                calculateFriction(this.ship);
             }
-        }
-        if ((this.keys[37] && this.keys[39]) || (!this.keys[37] && !this.keys[39])) {
-            this.ship.ax = 0;
-            calculateFriction(this.ship);
-        }
-        
-        if (this.ship.edges[0].x <= this.bottomLeftEdge.x || this.ship.edges[1].x >= this.bottomRightEdge.x) {
-            this.ship.ax = this.ship.ax * -1;
-            this.ship.vx = this.ship.vx * -1;
+            
+            if (this.ship.edges[0].x <= this.bottomLeftEdge.x || this.ship.edges[1].x >= this.bottomRightEdge.x) {
+                this.ship.ax = this.ship.ax * -1;
+                this.ship.vx = this.ship.vx * -1;
+            }
         }
 
-        this.background.draw();
+        this.background.draw(this.pause);
         updatePosition(this.ship);
         this.ship.draw(this.debug);
 
         this.hud.draw();
 
         engine.handleShots(context);
-        /*end game code*/
+        /* END GAME CODE */
 
         context.closePath();
 
@@ -180,6 +184,14 @@ class Engine {
 
         for (var i = 0; i < tempShipShots.length; i++) {
             this.shipShots.push(tempShipShots[i]);
+        }
+    }
+
+    handleAsteroids() {
+        let variance = 1;
+
+        for (var i = 1; i <= variance; i++) {
+
         }
     }
 }

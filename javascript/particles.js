@@ -1,5 +1,5 @@
 class Particles {
-    constructor (context, maxParticles, angle, addtoAngle) {
+    constructor (context, maxParticles, angle, addtoAngle, particles, img) {
         this.ctx = context;
         
         //canvas dimensions
@@ -7,23 +7,30 @@ class Particles {
         this.H = window.innerHeight;
         
         //particles
-        this.mp = maxParticles; //max particles
-        this.particles = [];
-        for(var i = 0; i < this.mp; i++)
-        {
-            this.particles.push({
-                x: Math.random() * this.W, //x-coordinate
-                y: Math.random() * this.H, //y-coordinate
-                r: Math.random() * 5, //radius
-                d: Math.random() * this.mp //density
-            })
-        }
+		if (particles == null) {
+			this.mp = maxParticles; //max particles
+			this.particles = [];
+			for(var i = 0; i < this.mp; i++)
+			{
+				this.particles.push({
+					x: Math.random() * this.W, //x-coordinate
+					y: Math.random() * this.H, //y-coordinate
+					r: Math.random() * 5, //radius
+					d: Math.random() * this.mp //density
+				})
+			}
+		}
+		else {
+			this.particles = particles;
+			this.mp = this.particles.size;
+			this.img = img;
+		}
 
         this.angle = angle;
         this.addtoAngle = addtoAngle;
     }
 
-	draw()
+	draw(pause)
 	{
         this.ctx.save();
         //this.ctx.clearRect(0, 0, this.W, this.H);
@@ -34,10 +41,17 @@ class Particles {
 		{
 			var p = this.particles[i];
 			this.ctx.moveTo(p.x, p.y);
-			this.ctx.arc(p.x, p.y, p.r, 0, Math.PI*2, true);
+			if (this.img == null) {
+				this.ctx.arc(p.x, p.y, p.r, 0, Math.PI*2, true);
+			}
+			else {
+				this.ctx.drawImage(this.img, p.x, p.y, this.img.width, this.img.height);
+			}
 		}
 		this.ctx.fill();
-        this.update();
+		if (!pause) {
+			this.update();
+		}
         this.ctx.restore();
 	}
 

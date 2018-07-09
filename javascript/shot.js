@@ -1,9 +1,10 @@
 class Shot {
-    constructor(ctx, x, y, movesUp) {
+    constructor (ctx, x, y, movesUp, isFromPlayer) {
         this.ctx = ctx;
         this.x = x;
         this.y = y;
         this.direction = movesUp;
+        this.isFromPlayer = isFromPlayer;
     }
 
     draw() {
@@ -13,8 +14,15 @@ class Shot {
         this.ctx.beginPath();
 
         var grd = this.ctx.createLinearGradient(0, 0, 0, 7);
-        grd.addColorStop(0, "#4ae2f9");
-        grd.addColorStop(1, "#0040ba");
+        
+        if (this.isFromPlayer) {
+            grd.addColorStop(0, "#4ae2f9");
+            grd.addColorStop(1, "#0040ba");
+        }
+        else {
+            grd.addColorStop(0, "#f93e43");
+            grd.addColorStop(1, "#9e0004");
+        }
 
         this.ctx.fillStyle = grd;
 
