@@ -1,10 +1,9 @@
 class Background {
     constructor (context) {
-        this.particles = new Particles(context, 500, 0, false, null, null);
+        this.particles = new Particles(context, 500, 0, false, null, null, true);
     }
 
-	draw(pause)
-	{
+	draw(pause) {
         this.particles.draw(pause);
 	}
 }

@@ -3,22 +3,36 @@ class Engine {
         this.x;
         this.y;
         this.ship;
+        this.mothership;
         this.background;
         this.hud;
+        this.asteroids;
 
-        this.debug = false;
-        this.pause = false;
-        this.counter = 0;
+        this.powerUpEdges;
+
+        this.lives = 10;
+        this.mothershipLife = 100;
+        this.score = 0;
+
+        this.isGameOver = false;
+        this.rounds = 0;
+        
+        this.powerUp = false;
+        this.powerUpScale = 7;
+        this.powerUpAngle = 0;
+
         this.accelerationFactor = 0.25;
-        this.breakingFactor = 10;
+        this.breakingFactor = 12;
         this.maxVelocity = 8;
         
-        this.tempPause = true;
+        this.canChangePause = true;
         this.pause = false;
 
-        this.tempShot = false;
+        this.canChangeMute = true;
+        this.mute = false;
+
+        this.canShoot = false;
         this.shipShots = [];
-        this.asteroids = [];
 
         //screen edges
         this.topLeftEdge;
@@ -52,6 +66,8 @@ class Engine {
 
         this.background = new Background(this.context);
         this.ship = new Ship(this.context, this.x, this.y);
+        this.mothership = new Mothership(this.context);
+        this.asteroids = new Asteroids(this.context);
         this.hud = new HUD(this.context);
 
         this.animate(this.canvas, this.context);
@@ -66,89 +82,40 @@ class Engine {
         context.beginPath();
 
         /* GAME CODE */
+        handleControls(this.keys, this.isGameOver);
         
-        //P
-        if(this.keys[80]) {
-            if (this.tempPause != this.pause) {
-                this.pause = !this.pause;
-            }
-        }
-        else if (!this.keys[80]) {
-            this.tempPause = !this.pause;
-        }
-
-        if (!this.pause) {
-            //Spacebar
-            if(this.keys[32]) {
-                if (this.tempShot) {
-                    let shot = new Shot(context, this.ship.x, this.ship.y - 10, true, true);
-                    this.shipShots.push(shot);
-                    this.tempShot = false;
-                }
-            }
-            else if (!this.keys[32]) {
-                this.tempShot = true;
-            }
-
-            //NAVIGATION
-            //Left arrow key
-            if(this.keys[37]) {
-                if (this.ship.vx > this.maxVelocity * -1) {
-                    if (this.ship.ax > 0) {
-                        this.ship.ax = this.accelerationFactor * -1 * this.breakingFactor;
-                        calculateFriction(this.ship);
-                    }
-                    else {
-                        this.ship.ax = this.accelerationFactor * -1;
-                    }
-                }
-                else {
-                    this.ship.ax = 0;
-                }
-            }
-            //Right arrow key
-            if(this.keys[39]) {
-                if (this.ship.vx < this.maxVelocity) {
-                    if (this.ship.ax < 0) {
-                        this.ship.ax = this.accelerationFactor * this.breakingFactor;
-                        calculateFriction(this.ship);
-                    }
-                    else {
-                        this.ship.ax = this.accelerationFactor;
-                    }
-                }
-                else {
-                    this.ship.ax = 0;
-                }
-            }
-            if ((this.keys[37] && this.keys[39]) || (!this.keys[37] && !this.keys[39])) {
-                this.ship.ax = 0;
-                calculateFriction(this.ship);
-            }
-            
-            if (this.ship.edges[0].x <= this.bottomLeftEdge.x || this.ship.edges[1].x >= this.bottomRightEdge.x) {
-                this.ship.ax = this.ship.ax * -1;
-                this.ship.vx = this.ship.vx * -1;
-            }
+        if (!this.pause && !this.isGameOver) {
+            updatePosition(this.ship);
         }
 
         this.background.draw(this.pause);
-        updatePosition(this.ship);
-        this.ship.draw(this.debug);
+        
+        if (!this.isGameOver) {
+            this.ship.draw();
+            this.mothership.draw();
+            this.asteroids.draw(this.pause);
 
-        this.hud.draw();
+            if(this.powerUp) {
+                this.drawPowerUp(context);
+            }
 
-        engine.handleShots(context);
+            this.hud.draw();
+        }
+
+        if (!this.pause && !this.isGameOver) {
+            handleCollision(this.counter);
+        }
+
+        if (this.isGameOver) {
+            engine.drawGameOverScreen(context);
+        }
+
         /* END GAME CODE */
 
         context.closePath();
 
         if(this.pause) {
             engine.drawPauseIcon(context);
-        }
-
-        if (!this.pause) {
-            this.counter++;
         }
     }
 
@@ -167,31 +134,39 @@ class Engine {
         ctx.closePath();
     }
 
-    handleShots(ctx) {
-        let tempShipShots = [];
+    drawGameOverScreen(ctx) {
         
-        for (var i = 0; i < this.shipShots.length; i++) {
-            let shot = this.shipShots[i];
+        ctx.beginPath()
+        ctx.fillStyle = "#44444499";
+        ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
-            if (shot.y > 0) {
-                tempShipShots.push(shot);
-            }
-
-            shot.draw();
-        }
-
-        this.shipShots = [];
-
-        for (var i = 0; i < tempShipShots.length; i++) {
-            this.shipShots.push(tempShipShots[i]);
-        }
+        ctx.fillStyle = "#ffffff";
+        ctx.font = "120px Arial";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.fillText("Game Over", ctx.canvas.width / 2, ctx.canvas.height / 2); 
     }
 
-    handleAsteroids() {
-        let variance = 1;
+    drawPowerUp(ctx) {
+        ctx.save();
+        let x = ctx.canvas.width / 2;
+        let y = ctx.canvas.height / 2;
+        ctx.translate(x, y);
+        ctx.rotate(this.powerUpAngle);
 
-        for (var i = 1; i <= variance; i++) {
-
+        if (!this.pause) {
+            this.powerUpAngle += 0.01;
         }
+
+        let img = this.ship.img;
+
+        this.powerUpEdges = [new Point(Math.floor(x - ((img.width / this.powerUpScale) / 2)), Math.floor(y - ((img.height / this.powerUpScale) / 2))),
+            new Point(Math.floor(x + ((img.width / this.powerUpScale) / 2)), Math.floor(y - ((img.height / this.powerUpScale) / 2))),
+            new Point(Math.floor(x - ((img.width / this.powerUpScale) / 2)), Math.floor(y + ((img.height / this.powerUpScale) / 2))),
+            new Point(Math.floor(x + ((img.width / this.powerUpScale) / 2)), Math.floor(y + ((img.height / this.powerUpScale) / 2)))];
+
+        ctx.drawImage(img, ((img.width / this.powerUpScale) / 2) * -1, ((img.height / this.powerUpScale) / 2) * -1, img.width / this.powerUpScale, img.height / this.powerUpScale);
+
+        ctx.restore();
     }
 }

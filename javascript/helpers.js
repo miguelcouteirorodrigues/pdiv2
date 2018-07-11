@@ -24,29 +24,22 @@ function rotatePoint(pivot, point) {
 }
 
 /**
- * Determines if two line intersect one another.
+ * Determines if a point is contained between two others.
  * Returns true if it does, false otherwise.
- * @param {Point} elemAPointA 
- * @param {Point} elemBPointA 
+ * @param {Point} elemAPointA
  * @param {Point} elemAPointB 
- * @param {Point} elemBPointB 
+ * @param {Point} elemBPointA
+ * @param {Point} elemBPointB
  */
-function IsIntersecting(elemAPointA, elemBPointA, elemAPointB, elemBPointB) {
-    console.log("elemA:");
-    console.log("Point A x/y: " + elemAPointA.x + "/" + elemAPointA.y + "\t\tPoint B x/y: " + elemAPointB.x + "/" + elemAPointB.y);
-    console.log("\nelemB:");
-    console.log("Point A x/y: " + elemBPointA.x + "/" + elemBPointA.y + "\t\tPoint B x/y: " + elemBPointB.x + "/" + elemBPointB.y);
-    console.log("\n\n\n");
-
-    
-    if (((elemAPointA.y <= elemBPointA.y <= elemAPointB.y ||
-        elemAPointA.y <= elemBPointB.y <= elemAPointB.y ||
-        elemBPointA.y <= elemAPointA.y <= elemBPointB.y ||
-        elemBPointA.y <= elemAPointB.y <= elemBPointB.y) &&
-        (elemAPointA.x <= elemBPointA.x <= elemAPointB.x ||
-        elemAPointA.x <= elemBPointB.x <= elemAPointB.x ||
-        elemBPointA.x <= elemAPointA.x <= elemBPointB.x ||
-        elemBPointA.x <= elemAPointB.x <= elemBPointB.x))) {
+function isIntersecting(elemAPointA, elemAPointB, elemBPointA, elemBPointB) {
+    if (
+        (((elemAPointA.x <= elemBPointA.x && elemBPointA.x <= elemAPointB.x) ||
+        (elemAPointA.x <= elemBPointB.x && elemBPointB.x <= elemAPointB.x)) ||
+        ((elemBPointA.x <= elemAPointA.x && elemAPointA.x <= elemBPointB.x) ||
+        (elemBPointA.x <= elemAPointB.x && elemAPointB.x <= elemBPointB.x)))
+        &&
+        (elemAPointA.y > elemBPointA.y || elemAPointA.y > elemBPointB.y || elemAPointB.y > elemBPointA.y || elemBPointA.y > elemBPointA.y)
+    ) {
         return true;
     }
     return false;
@@ -76,4 +69,17 @@ function calculateFriction(obj){
     var angle = Math.atan2(obj.vy, obj.vx);
     obj.vx = Math.cos(angle) * speed;
     obj.vy = Math.sin(angle) * speed;
+}
+
+function soundEffect(id) {
+    let tag_id = id + "_" + getRandomInt(1,100);
+    audio = new Audio();
+
+    let src1  = document.createElement("source");
+    src1.type = "audio/mpeg";
+    src1.src  = "assets/" + id + ".mp3";
+    src1.id = tag_id;
+    audio.appendChild(src1);
+
+    audio.play();
 }

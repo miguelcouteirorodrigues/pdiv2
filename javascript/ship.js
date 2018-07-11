@@ -18,6 +18,8 @@ class Ship {
             new Point(Math.floor(this.x + ((this.img.width / this.scale) / 2)), Math.floor(this.y - ((this.img.height / this.scale) / 2))),
             new Point(Math.floor(this.x - ((this.img.width / this.scale) / 2)), Math.floor(this.y + ((this.img.height / this.scale) / 2))),
             new Point(Math.floor(this.x + ((this.img.width / this.scale) / 2)), Math.floor(this.y + ((this.img.height / this.scale) / 2)))];
+
+        this.shipCenter;
     }
 
     draw() {
@@ -29,9 +31,9 @@ class Ship {
                     new Point(Math.floor(this.x - ((this.img.width / this.scale) / 2)), Math.floor(this.y + ((this.img.height / this.scale) / 2))),
                     new Point(Math.floor(this.x + ((this.img.width / this.scale) / 2)), Math.floor(this.y + ((this.img.height / this.scale) / 2)))];
 
-        var shipCenter = new Point(((this.img.width / this.scale) / 2) * -1, (((this.img.height / this.scale) / 2) * -1));
-        this.ctx.imageSmoothingEnabled = "true";
-        this.ctx.drawImage(this.img, shipCenter.x, shipCenter.y, this.img.width / this.scale, this.img.height / this.scale);
+        this.shipCenter = new Point(this.x + (((this.img.width / this.scale) / 2) * -1), (this.y + (((this.img.height / this.scale) / 2) * -1)));
+        //this.ctx.imageSmoothingEnabled = "true";
+        this.ctx.drawImage(this.img, ((this.img.width / this.scale) / 2) * -1, ((this.img.height / this.scale) / 2) * -1, this.img.width / this.scale, this.img.height / this.scale);
 
         this.ctx.restore();
     }
