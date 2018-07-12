@@ -78,7 +78,7 @@ function asteroidCollisions(ship, asteroids, asteroidImg, shipShots) {
             let shotPoint = new Point(shot.x, shot.y);
             
             if (isIntersecting(engine.powerUpEdges[2], engine.powerUpEdges[3], shotPoint, shotPoint)) {
-                engine.lives += 2;
+                engine.lives += 2.5;
                 if(engine.lives > 10) {
                     engine.lives = 10;
                 }
