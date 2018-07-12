@@ -39,7 +39,6 @@ class Mothership {
         grd.addColorStop(0,"#0c78d6");
         grd.addColorStop(1,"#7991b7");
         this.ctx.fillStyle=grd;
-        //this.ctx.fillStyle = "#0c78d6";
 
         this.ctx.beginPath();
 
@@ -47,16 +46,6 @@ class Mothership {
         this.ctx.lineTo(this.ctx.canvas.width / 8.2, this.ctx.canvas.height - (this.ctx.canvas.height / 16));
         this.ctx.lineTo(this.ctx.canvas.width - (this.ctx.canvas.width / 8.2), this.ctx.canvas.height - (this.ctx.canvas.height / 16));
         this.ctx.lineTo(this.ctx.canvas.width - (this.ctx.canvas.width / 10), this.ctx.canvas.height - (this.ctx.canvas.height / 50));
-
-        this.ctx.closePath();
-
-        this.ctx.stroke();
-        this.ctx.fill();
-
-        this.ctx.beginPath();
-
-        this.ctx.moveTo(this.ctx.canvas.width / 2, this.ctx.canvas.height - (this.ctx.canvas.height / 16));
-        this.ctx.lineTo(this.ctx.canvas.width / 2, this.ctx.canvas.height - (this.ctx.canvas.height / 50));
 
         this.ctx.closePath();
 

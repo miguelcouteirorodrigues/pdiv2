@@ -75,8 +75,8 @@ function handleControls (keys) {
                 calculateFriction(engine.ship);
             }
             
-            if (engine.ship.edges[0].x <= engine.bottomLeftEdge.x || engine.ship.edges[1].x >= engine.bottomRightEdge.x) {
-                engine.ship.ax = engine.ship.ax * -1;
+            if (engine.ship.edges[0].x < engine.bottomLeftEdge.x || engine.ship.edges[1].x > engine.bottomRightEdge.x) {
+                //engine.ship.ax = engine.ship.ax * -1;
                 engine.ship.vx = engine.ship.vx * -1;
             }
         }

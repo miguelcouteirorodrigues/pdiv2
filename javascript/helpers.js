@@ -72,14 +72,16 @@ function calculateFriction(obj){
 }
 
 function soundEffect(id) {
-    let tag_id = id + "_" + getRandomInt(1,100);
-    audio = new Audio();
+    if (!engine.mute) {
+        let tag_id = id + "_" + getRandomInt(1,100);
+        audio = new Audio();
 
-    let src1  = document.createElement("source");
-    src1.type = "audio/mpeg";
-    src1.src  = "assets/" + id + ".mp3";
-    src1.id = tag_id;
-    audio.appendChild(src1);
+        let src1  = document.createElement("source");
+        src1.type = "audio/mpeg";
+        src1.src  = "assets/" + id + ".mp3";
+        src1.id = tag_id;
+        audio.appendChild(src1);
 
-    audio.play();
+        audio.play();
+    }
 }

@@ -31,9 +31,7 @@ function asteroidCollisions(ship, asteroids, asteroidImg, shipShots) {
             console.log("asteroid has hit ship.");
             engine.lives--;
             asteroids.splice(i, 1);
-            if (!engine.mute) {
-                soundEffect("ship");
-            }
+            soundEffect("ship");
         }
 
         //mothership collisions
@@ -50,9 +48,7 @@ function asteroidCollisions(ship, asteroids, asteroidImg, shipShots) {
             console.log("asteroid has hit mothership.");
             engine.mothershipLife -= 2.5;
             asteroids.splice(i, 1);
-            if (!engine.mute) {
-                soundEffect("ship");
-            }
+            soundEffect("ship");
         }
 
         //shot collisions
@@ -64,9 +60,7 @@ function asteroidCollisions(ship, asteroids, asteroidImg, shipShots) {
                 asteroids.splice(i, 1);
                 shipShots.splice(j, 1);
                 engine.score += 100;
-                if (!engine.mute) {
-                    soundEffect("asteroid");
-                }
+                soundEffect("asteroid");
             }
             else if (shot.y < 0) {
                 shipShots.splice(j, 1);
@@ -79,24 +73,24 @@ function asteroidCollisions(ship, asteroids, asteroidImg, shipShots) {
     }
 
     if(engine.powerUp) {
-        shipShots.splice(0, shipShots.length);
-        
         for (var j = 0; j < shipShots.length; j++) {
             let shot = shipShots[j];
             let shotPoint = new Point(shot.x, shot.y);
             
             if (isIntersecting(engine.powerUpEdges[2], engine.powerUpEdges[3], shotPoint, shotPoint)) {
                 engine.lives += 2;
-
                 if(engine.lives > 10) {
                     engine.lives = 10;
                 }
+
                 engine.mothershipLife += 25;
                 if (engine.mothershipLife > 100) {
                     engine.mothershipLife = 100;
                 }
+
                 engine.powerUp = false;
                 shipShots.splice(j, 1);
+                soundEffect("powerup");
             }
             else if (shot.y < 0) {
                 shipShots.splice(j, 1);

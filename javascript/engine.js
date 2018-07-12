@@ -15,6 +15,7 @@ class Engine {
         this.score = 0;
 
         this.isGameOver = false;
+        this.hasGameOverMusicStarted = false;
         this.rounds = 0;
         
         this.powerUp = false;
@@ -109,7 +110,6 @@ class Engine {
         if (this.isGameOver) {
             engine.drawGameOverScreen(context);
         }
-
         /* END GAME CODE */
 
         context.closePath();
@@ -135,7 +135,7 @@ class Engine {
     }
 
     drawGameOverScreen(ctx) {
-        
+        ctx.save();
         ctx.beginPath()
         ctx.fillStyle = "#44444499";
         ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
@@ -144,7 +144,13 @@ class Engine {
         ctx.font = "120px Arial";
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
-        ctx.fillText("Game Over", ctx.canvas.width / 2, ctx.canvas.height / 2); 
+        ctx.fillText("Game Over", ctx.canvas.width / 2, ctx.canvas.height / 2);
+        if (!this.hasGameOverMusicStarted) {
+            soundEffect("game_over");
+            this.hasGameOverMusicStarted = true;
+        }
+        ctx.closePath();
+        ctx.restore();
     }
 
     drawPowerUp(ctx) {
